@@ -58,8 +58,12 @@ Function Restore-SPOnlineDeletedFiles {
     (
         [Parameter(Mandatory)]
         [string]$SiteCollectionUrl,
+        # TODO: find a 100% pattern, including external email addresses, or use a function to test email address?
+        # [ValidatePattern('^[\.\w\d_-]+@(\w+\.)?abb\.com$')]
         [string]$DeletedByEmail,
+        [ValidatePattern('^\d{4}-\d\d-\d\d$')]
         [DateTime]$StartDate,
+        [ValidatePattern('^\d{4}-\d\d-\d\d$')]
         [DateTime]$EndDate,
         [string[]]$FileType
     )
@@ -100,41 +104,36 @@ Function Restore-SPOnlineDeletedFiles {
             WriteDebug "Files deleted before: $EndDate"
             WriteDebug "Files deleted of type: $FileType"
 
-            $FilterString = ""
-            if($StartDate -and $EndDate){
-                $FilterString = '($_.DeletedDate -gt $StartDate -and $_.DeletedDate -lt $EndDate)'
-            }
-            elseif($StartDate){
-                $FilterString = '$_.DeletedDate -gt $StartDate'
-            }
-            elseif($EndDate){
-                $FilterString = '$_.DeletedDate -lt $EndDate'
+            $FilterStrings = @()
+
+            if($StartDate){
+                $FilterStrings += '($_.DeletedDate -gt $StartDate)'
             }
 
-            if(($StartDate -or $EndDate) -and $DeletedByEmail){
-                $FilterString = $FilterString + ' -and $_.DeletedByEmail -eq $DeletedByEmail'
-            }
-            elseif($DeletedByEmail){
-                $FilterString = '$_.DeletedByEmail -eq $DeletedByEmail'
+            if($EndDate){
+                $FilterStrings += '($_.DeletedDate -lt $EndDate)'
             }
 
-            if(($StartDate -or $EndDate -or $DeletedByEmail) -and $FileType){
-                $FilterString = $FilterString + ' -and ($_.LeafName -like $FileType)'
-            }
-            elseif($FileType){
-                $FilterString = '$_.LeafName -like $FileType'
+            if($DeletedByEmail){
+                $FilterStrings += '($_.DeletedByEmail -eq $DeletedByEmail)'
             }
 
+            if($FileType){
+                $FilterStrings += '($_.LeafName -like $FileType)'
+            }
+
+            $FilterString = $FilterStrings -join " -and "
             $DeletedItems = Get-PnPRecycleBinItem | Where-Object {Invoke-Expression($FilterString)}
 
             WriteDebug
-            WriteDebug "Deleted Items:"
+            WriteDebug "Deleted Items scheduled for restore, based on filter (make sure the filter is correct):"
+            WriteDebug "(Filter string: $FilterString)"
             ForEach($Item in $DeletedItems)
             {
                 WriteDebug "$($Item.LeafName)"
             }
 
-            $conf = Confirm "Do you want to restore these files"
+            $conf = Confirm "Do you want to restore these files (applied filter: $FilterString)" # repeat filter, in case Debug messages are not visible?
 
             if($conf){
             #Restore all deleted items from the given path to its original location
