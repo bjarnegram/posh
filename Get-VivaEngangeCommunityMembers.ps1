@@ -31,13 +31,7 @@ Function Get-VivaEngangeCommunityMembers {
           and get a developer-token    
 
     .EXAMPLE
-        Restore-SPOnlineDeletedFiles -SiteCollectionUrl 'https://contoso.sharepoint.com/sites/sitecollection1'
-
-    .EXAMPLE
-        Restore-SPOnlineDeletedFiles -SiteCollectionUrl 'https://contoso.sharepoint.com/sites/sitecollection1' -DeletedByEmail 'user@contoso.com'
-
-    .EXAMPLE
-        Restore-SPOnlineDeletedFiles -SiteCollectionUrl 'https://contoso.sharepoint.com/sites/sitecollection1' -DeletedByEmail 'user@contoso.com' -FileType '*.docx'
+        Get-VivaEngangeCommunityMembers -CommunityID 123456 -Token '*******'
 
     .NOTES
         Author:  Bjarne L. Gram
