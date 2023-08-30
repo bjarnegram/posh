@@ -15,7 +15,7 @@ When having issues with MS Teams clearing all cache often solves issues.
 ## Get-ADGroupMemberList.ps1
 Creates a CSV fil with UserName, Name and Mail of all users in a given group.
 ## Get-SPSubsitesWithOwnersFromList.ps1
-Get-SPSubsitesWithOwners is a function that gets a list of subsites with members of Site Owners group from one or more Site Collections in CSV file.
+Get-SPSubsitesWithOwners is a function that gets a list of subsites with members of Site Owners group from one or more Site Collections in CSV file
 ## Get-VivaEngangeCommunityMembers.ps1
 Get members of a Viva Engage Community to a CSV-file
 

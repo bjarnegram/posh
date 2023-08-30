@@ -44,6 +44,7 @@ Function Confirm-Action ($text) {
 	else {
 		return $false
 	}
+	Write-Host -ForegroundColor White ">"
 }
 
 Function Write-DebugInfo ($text) {
