@@ -15,7 +15,11 @@
     Get-SPSubsitesWithOwners is a function that gets a list
     of subsites with members of Site Owners group
     from one or more Site Collections in a CSV file.
-    
+
+    It's running in the context of the current user, and will
+    only get information about Site Collections and
+    Sub Sites that the current user has access to.
+
     NB!
     It depends on posh/include-functions.ps1 
 
