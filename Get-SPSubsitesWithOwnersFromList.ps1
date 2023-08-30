@@ -175,18 +175,18 @@ foreach ($SiteCollection in $InputSiteCollections) {
             $SiteCollection.'Site Collection Admins' = 'N/A'
         }
 
-        # Get all subwebs (sites) from Site Collection
+        # Get all sub sites from Site Collection
         # Only get Author field if it exists
         try {
-            $SubWebs = Get-PnPSubWeb -Recurse -IncludeRootWeb -Includes "Author"
+            $SubSites = Get-PnPSubWeb -Recurse -IncludeRootWeb -Includes "Author"
         }
         catch {
             try {
-                $SubWebs = Get-PnPSubWeb -Recurse -IncludeRootWeb 
+                $SubSites = Get-PnPSubWeb -Recurse -IncludeRootWeb 
             }
             catch {
                 # NO SUBSITES IN CURRENT SITE COLLECTION
-                $SubWebs = $null
+                $SubSites = $null
                 $SiteCollection.'Sub Site Name' = "N/A"
             }
         }
@@ -194,38 +194,38 @@ foreach ($SiteCollection in $InputSiteCollections) {
         # Add row to CSV Output file
         $SiteCollection | Export-Csv -Path $CsvOutputFilePath -Append -Delimiter ";"
 
-        if ($SubWebs) {
+        if ($SubSites) {
             # Write out info about sub sites in Site Collection
-            Write-Prompt "Site Collection $($SiteCollection.'Site Name') contains $($Subwebs.Count) subwebs"
+            Write-Prompt "Site Collection $($SiteCollection.'Site Name') contains $($SubSites.Count) Sub Sites"
             Write-Host
-            $SubWebs | Format-Table -Property Title, ServerRelativeUrl
+            $SubSites | Format-Table -Property Title, ServerRelativeUrl
     
-            # Loop through subwebs
-            foreach ($SubWeb in $SubWebs) {
+            # Loop through sub sites
+            foreach ($SubSite in $SubSites) {
                 
                 # Filter away On-Prem sites and Apps
-                if ($SubWeb.Url -like 'https://abb.sharepoint.com/*') {
+                if ($SubSite.Url -like 'https://abb.sharepoint.com/*') {
 
                     # Copy of SC Object for addition
                     $SCCopy = $SiteCollection.PSObject.Copy()
     
-                    $SCCopy.'Sub Site Name' = $SubWeb.Title
-                    $SCCopy.'Sub Site Url' = $SubWeb.Url
-                    if ($SubWeb.Author) {
-                        $SCCopy.'Created By' = $SubWeb.Author.Email
+                    $SCCopy.'Sub Site Name' = $SubSite.Title
+                    $SCCopy.'Sub Site Url' = $SubSite.Url
+                    if ($SubSite.Author) {
+                        $SCCopy.'Created By' = $SubSite.Author.Email
                     }
                     else {
                         $SCCopy.'Created By' = ""
                     }
                     Write-Line
                     Write-Host
-                    Write-Prompt "Sub Site Title:         $($SubWeb.Title)"
-                    Write-Prompt "Sub Site Url:           $($SubWeb.Url)"
-                    Write-Prompt "Sub Site Created By:    $($SubWeb.Author.Email)"
+                    Write-Prompt "Sub Site Title:         $($SubSite.Title)"
+                    Write-Prompt "Sub Site Url:           $($SubSite.Url)"
+                    Write-Prompt "Sub Site Created By:    $($SubSite.Author.Email)"
                     Write-Host
         
-                    # Connect to Subweb
-                    Connect-PnPOnline -Url $SubWeb.Url -Interactive
+                    # Connect to Sub Site
+                    Connect-PnPOnline -Url $SubSite.Url -Interactive
     
                     # Get Owners and loop through
                     $OwnerGroup = Get-PnPGroup -AssociatedOwnerGroup -ErrorAction SilentlyContinue
@@ -259,9 +259,9 @@ foreach ($SiteCollection in $InputSiteCollections) {
                 else {
                     Write-Line
                     Write-Host
-                    Write-Prompt "Sub Site Title:         $($SubWeb.Title)"
-                    Write-Prompt "Sub Site Url:           $($SubWeb.Url)"
-                    Write-Prompt "Sub Site Created By:    $($SubWeb.Author.Email)"
+                    Write-Prompt "Sub Site Title:         $($SubSite.Title)"
+                    Write-Prompt "Sub Site Url:           $($SubSite.Url)"
+                    Write-Prompt "Sub Site Created By:    $($SubSite.Author.Email)"
                     Write-Host
                     Write-DebugInfo "This Sub Site is either on-prem or an App and as such out of scope..."
                     Write-Host
