@@ -23,7 +23,7 @@
     NB!
     It depends on posh/include-functions.ps1 
 
-.PARAMETER CsvSiteCollectionsFile
+.PARAMETER Path
     Path to Csv-File containing Site Collections
     Csv-file must have following structure:
         [Site Name;
@@ -52,19 +52,19 @@
 param
 (
     [Parameter(Mandatory)]
-    [string]$CsvSiteCollectionsFile
+    [string]$Path
 )
 
 # Parameters
-if (-not (Test-Path $CsvSiteCollectionsFile)) {
+if (-not (Test-Path $Path)) {
     Write-Prompt
-    Write-Important "The file $($CsvSiteCollectionsFile) does not exist."
+    Write-Important "The file $($Path) does not exist."
     Stop-Transcript
     Exit
 }
 
 # Get location of input file to store output file and log
-$CsvLocation = Split-Path -Path $CsvSiteCollectionsFile
+$CsvLocation = Split-Path -Path $Path
 
 # Logging
 $dateStamp = Get-Date -Format yyyy-MM-dd-HH-mm-ss
@@ -82,7 +82,7 @@ $isDebug = $true
 Write-Header "Get list of subsites with owners from Site Collections in CSV-file"
 
 # Set file paths
-$CsvInputFilePath = $CsvSiteCollectionsFile
+$CsvInputFilePath = $Path
 $CsvOutputFilePath = "Get-SPSubsitesWithOwners-$dateStamp.csv"
 $CsvOutputFilePath = Join-Path $CsvLocation $CsvOutputFilePath
 Write-Prompt "Using Input CSV-file:         $($CsvInputFilePath)"
@@ -123,7 +123,7 @@ Gdpr,
 # Save CSV setup to output file
 $OutputSiteCollections | Export-Csv -Path $CsvOutputFilePath -Delimiter ';'
 
-# Output list of Site Collections in file
+# Write list of Site Collections in file
 Write-Prompt "CSV-file contains $($InputSiteCollections.Count) Site Collections"
 $InputSiteCollections | Format-Table -Property 'Site Name', 'Site Url', Owner
 
@@ -171,9 +171,9 @@ foreach ($SiteCollection in $InputSiteCollections) {
 
             Write-Host
         }
-
-        # Add row to CSV Output file
-        $SiteCollection | Export-Csv -Path $CsvOutputFilePath -Append -Delimiter ";"
+        else {
+            $SiteCollection.'Site Collection Admins' = 'N/A'
+        }
 
         # Get all subwebs (sites) from Site Collection
         # Only get Author field if it exists
@@ -187,8 +187,13 @@ foreach ($SiteCollection in $InputSiteCollections) {
             catch {
                 # NO SUBSITES IN CURRENT SITE COLLECTION
                 $SubWebs = $null
+                $SiteCollection.'Sub Site Name' = "N/A"
             }
         }
+        
+        # Add row to CSV Output file
+        $SiteCollection | Export-Csv -Path $CsvOutputFilePath -Append -Delimiter ";"
+
         if ($SubWebs) {
             # Write out info about sub sites in Site Collection
             Write-Prompt "Site Collection $($SiteCollection.'Site Name') contains $($Subwebs.Count) subwebs"
