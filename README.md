@@ -33,5 +33,3 @@ Script to restore items from Recycle Bin
 Dot load it first:
 
 ` . .\Restore-SPOnlineDeletedFiles`
-## UserMembershipReport
-This script exports Office 365 user's group details to CSV

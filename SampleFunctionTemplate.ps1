@@ -1,7 +1,7 @@
 function Function-Name {
 <#
 .Synopsis
-  The short function description.
+ 	The short function description.
 .Description
 	The long function description
 .Example
@@ -45,6 +45,6 @@ http://twitter.com/foo
         else {
             Write "Not doing it..."
         }
-	END{}
+	# END{}
     }
 } #End function
