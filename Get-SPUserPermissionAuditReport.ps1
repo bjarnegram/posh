@@ -1,4 +1,6 @@
 
+## From: https://pnp.github.io/script-samples/spo-export-sitecollection-permission-with-subwebs/README.html?tabs=pnpps
+
 $BasePath = "C:\temp\SitePermission\"
 $DateTime = "{0:MM_dd_yy}_{0:HH_mm_ss}" -f (Get-Date)
 $CSVPath = $BasePath + "\sitepermissions" + $DateTime + ".csv"
