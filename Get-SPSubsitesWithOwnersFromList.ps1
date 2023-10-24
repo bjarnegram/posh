@@ -98,6 +98,7 @@ $MissingMembers = @{
     'Sub Site Url'            = ''
     'Associated Owners Group' = ''
     'Created By'              = ''
+    'List Item Count'       = ''
 }
 $InputSiteCollections | Add-Member -NotePropertyMembers $MissingMembers
 
@@ -110,6 +111,7 @@ $OutputSiteCollections = Select-Object -InputObject $InputSiteCollections -Prope
 'Sub Site Url',
 'Associated Owners Group',
 Owner,
+'List Item Count',
 'Expiration Date',
 'External Collaboration',
 Confidentiality,
@@ -217,11 +219,21 @@ foreach ($SiteCollection in $InputSiteCollections) {
                     else {
                         $SCCopy.'Created By' = ""
                     }
+
+                    # Sum Items Count
+                    $SumItemsCount = 0
+                    $SubSiteLists =  Get-PnPList | Select Title, ItemCount
+                    foreach ($SubSiteList in $SubSiteLists) {
+                        $SumItemsCount += $SubSiteList.ItemCount
+                    }
+                    $SCCopy.'List Item Count' = $SumItemsCount
+
                     Write-Line
                     Write-Host
-                    Write-Prompt "Sub Site Title:         $($SubSite.Title)"
-                    Write-Prompt "Sub Site Url:           $($SubSite.Url)"
-                    Write-Prompt "Sub Site Created By:    $($SubSite.Author.Email)"
+                    Write-Prompt "Sub Site Title:            $($SubSite.Title)"
+                    Write-Prompt "Sub Site Url:              $($SubSite.Url)"
+                    Write-Prompt "Sub Site Created By:       $($SubSite.Author.Email)"
+                    Write-Prompt "Sub Site List Items Count: $($SumItemsCount)"
                     Write-Host
         
                     # Connect to Sub Site

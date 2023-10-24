@@ -2,8 +2,9 @@
 ## From: https://pnp.github.io/script-samples/spo-export-sitecollection-permission-with-subwebs/README.html?tabs=pnpps
 
 $BasePath = "C:\temp\SitePermission\"
-$DateTime = "{0:MM_dd_yy}_{0:HH_mm_ss}" -f (Get-Date)
+$DateTime = "{0:dd_MM_yy}_{0:HH_mm_ss}" -f (Get-Date)
 $CSVPath = $BasePath + "\sitepermissions" + $DateTime + ".csv"
+$global:permissions = @()
 
 Function ConnectToSPSite() {
     try {
@@ -25,7 +26,7 @@ Function ConnectToSPSite() {
 
 Function WebPermission {
     try {
-        $Web = Get-PnPWeb # -Includes RoleAssignments
+        $Web = Get-PnPWeb -Includes RoleAssignments
         CheckPermission $Web    
         SubWebPermission        
     }
@@ -51,7 +52,7 @@ Function CheckPermission ($obj) {
 
             If ($PermissionType -eq "SharePointGroup") {
                     
-                $GroupMembers = Get-PnPGroupMembers -Identity $RoleAssignment.Member.LoginName                                  
+                $GroupMembers = Get-PnPGroupMember -Identity $RoleAssignment.Member.LoginName                                  
                 If ($GroupMembers.count -eq 0) { Continue }
                 ForEach ($User in $GroupMembers) {
                     $global:permissions += New-Object PSObject -Property ([ordered]@{
@@ -91,7 +92,7 @@ Function SubWebPermission {
         $subwebs = Get-PnPSubWeb -Recurse  
         foreach ($subweb in $subwebs) { 
             Write-Host "Connecting to Subweb :'$($subweb.Url)'..." -ForegroundColor Yellow
-            Connect-PnPOnline -Url $subweb.Url -Credentials $Creds
+            Connect-PnPOnline -Url $subweb.Url -Interactive
             Write-Host "Connection successfully to Subweb :'$($subweb.Url)'..." -ForegroundColor Green
             CheckPermission $subweb
         } 
