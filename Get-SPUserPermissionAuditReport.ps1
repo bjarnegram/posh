@@ -37,7 +37,7 @@ Function WebPermission {
 
 Function CheckPermission ($obj) {
     try {
-        Write-Host "Getting permission for the :'$($obj.Url)'..." -ForegroundColor Yellow
+        Write-Host "Getting permissions for:'$($obj.Url)'..." -ForegroundColor Yellow
         Get-PnPProperty -ClientObject $obj -Property HasUniqueRoleAssignments, RoleAssignments      
         $HasUniquePermissions = $obj.HasUniqueRoleAssignments
    
@@ -80,7 +80,7 @@ Function CheckPermission ($obj) {
         }                                  
         BindingtoCSV($global:permissions)
         $global:permissions = @()
-        Write-Host "Getting permission successfully for the :'$($obj.Url)'..." -ForegroundColor Green
+        Write-Host "Getting permissions successfully for:'$($obj.Url)'..." -ForegroundColor Green
     }
     catch {
         Write-Host "Error in checking permission" $_.Exception.Message -ForegroundColor Red               
