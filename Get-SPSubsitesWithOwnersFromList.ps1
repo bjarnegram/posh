@@ -20,6 +20,8 @@
     only get information about Site Collections and
     Sub Sites that the current user has access to.
 
+    Column 'List Item Count' shows sum of items in all lists in site.
+
     NB!
     It depends on posh/include-functions.ps1 
 
