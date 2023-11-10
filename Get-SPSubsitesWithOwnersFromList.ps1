@@ -234,7 +234,7 @@ foreach ($SiteCollection in $InputSiteCollections) {
 
                     # Sum Items Count
                     $SumItemsCount = 0
-                    $SubSiteLists = Get-PnPList | Select Title, ItemCount
+                    $SubSiteLists = Get-PnPList | Select-Object Title, ItemCount
                     foreach ($SubSiteList in $SubSiteLists) {
                         $SumItemsCount += $SubSiteList.ItemCount
                     }
