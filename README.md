@@ -48,3 +48,12 @@ Read more here: https://www.sharepointdiary.com/2017/04/sharepoint-online-find-c
 Genereate a report of users with permissions
 
 From: https://pnp.github.io/script-samples/spo-export-sitecollection-permission-with-subwebs/README.html?tabs=pnpps
+
+## Rename-SPFiles
+Script to rename files in a SharePoint library
+
+Files named "file *" will be renamed to "File*"
+
+Without space between "file" and the number
+
+Usage: Rename-SPFiles -SiteUrl https://contoso.sharepoint.com/sites/contoso -LibraryName Documents

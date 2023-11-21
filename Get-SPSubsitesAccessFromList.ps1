@@ -44,7 +44,7 @@
 
 .NOTES
     Author:  Bjarne L. Gram
-    Email:   bjarne@microgram.no
+    Email:   bjarne.l.gram@no.abb.com
     Twitter: @bjarnegram
 #>
 
