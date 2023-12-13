@@ -52,8 +52,15 @@ From: https://pnp.github.io/script-samples/spo-export-sitecollection-permission-
 ## Rename-SPFiles
 Script to rename files in a SharePoint library
 
-Files named "file *" will be renamed to "File*"
+Files named "file NN" will be renamed to "FileNN"
 
 Without space between "file" and the number
 
 Usage: Rename-SPFiles -SiteUrl https://contoso.sharepoint.com/sites/contoso -LibraryName Documents
+
+## Set-SPRegionalSettings
+Script that sets relevant Regional Settings and Time Zone to Norwegian
+
+Can be modified for other Locale, TimeZone et.c.
+
+Usage: Set-SPRegionalSettings -Url https://contoso.sharepoint.com/sites/contoso
